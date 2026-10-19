@@ -21,7 +21,8 @@ Checked 19 October 2026 on Windows with Node.js 24.18.0.
 | Desktop (1440px) and mobile (390px) layouts | Screenshots inspected; no horizontal overflow in tested library/guide views |
 | Browser page errors | None during the tested paths |
 | Production build | Passed: all five Vinext/Vite build stages completed; both API routes emitted |
-| Hosted deployment | In progress; result will be recorded before handoff |
+| Hosted deployment | Succeeded: https://oauth-launchpath.shahilsunny2104.chatgpt.site (private) |
+| Hosted page, seeded API, D1 missing-record lookup, origin protection and missing-secret response | Passed: HTTP 200 / 200 / 404 / 403 / 503 respectively |
 | Live model + web research + save + reopen | **Not tested: OPENAI_API_KEY is not configured** |
 | Real provider OAuth connection or approval | **Not performed** |
 

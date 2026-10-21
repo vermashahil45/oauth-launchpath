@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Launchpath — OAuth setup, without the guesswork",
-  description: "Evidence-backed OAuth setup guides. Know the work, the wait, and your next step.",
+  title: "Launchpath — OAuth setup guides",
+  description: "Provider registration, permissions, approval requirements, and setup notes for agent builders.",
   icons: {
     icon: "/launchpath.svg",
     shortcut: "/launchpath.svg",

@@ -17,7 +17,7 @@ page.on("pageerror", e => errors.push(e.message));
 try {
  const response = await page.goto(base, { waitUntil: "networkidle" });
  assert.equal(response.status(), 200);
- await page.getByRole("heading", { name: /OAuth setup,/ }).waitFor();
+ await page.getByRole("heading", { name: /OAuth setup guides/ }).waitFor();
  assert.equal(await page.locator(".guide-card").count(), 3);
  await page.screenshot({ path: path.join(output, "library-desktop.png"), fullPage: true });
  await page.getByRole("textbox", { name: "Search guide library" }).fill("gmail");
@@ -36,7 +36,7 @@ try {
  await page.locator("summary").first().click();
  assert.equal(await page.locator("details[open]").count(), 1);
  await page.getByRole("tab", { name: "Evidence", exact: true }).click();
- await page.getByRole("heading", { name: "Evidence, with its limits" }).waitFor();
+ await page.getByRole("heading", { name: "Sources and testing notes" }).waitFor();
  await page.screenshot({ path: path.join(output, "github-evidence.png"), fullPage: true });
  const downloadPromise = page.waitForEvent("download");
  await page.getByRole("button", { name: "Export guide" }).click();
@@ -62,17 +62,22 @@ try {
  await page.locator(".load-state").waitFor();
  await page.locator(".nav-item").first().click();
  await page.waitForTimeout(1200);
- await page.getByRole("heading", { name: /OAuth setup,/ }).waitFor();
+ await page.getByRole("heading", { name: /OAuth setup guides/ }).waitFor();
  assert.equal(new URL(page.url()).search, "");
  await page.goto(base, { waitUntil: "networkidle" });
  await page.locator(".research-banner").getByRole("button", { name: "Investigate an app" }).click();
  await page.getByRole("dialog").waitFor();
+ const serviceStatus = await (await page.request.get(`${base}/api/research/status`)).json();
+ assert.deepEqual(Object.keys(serviceStatus), ["available"]);
+ assert.equal(typeof serviceStatus.available, "boolean");
  await page.getByLabel("App name or website").fill("Notion");
  await page.getByLabel("What should your integration do?").fill("Search a user's workspace pages from an AI assistant");
  if (process.env.QA_EXPECT_UNCONFIGURED === "1") {
-  await page.getByRole("button", { name: "Generate my guide" }).click();
-  await page.getByRole("alert").waitFor();
-  assert.ok((await page.getByRole("alert").innerText()).includes("not configured"));
+  await page.locator(".service-notice").waitFor();
+  assert.ok((await page.locator(".service-notice").innerText()).includes("not configured"));
+  assert.ok(await page.getByRole("button", { name: "Generate my guide" }).isDisabled());
+  const rejected = await page.request.post(`${base}/api/research`, { headers: { Origin: base }, data: { provider: "Notion", scenario: "Search workspace pages from an assistant", distribution: "Public external integration" } });
+  assert.equal(rejected.status(), 503);
  }
  await page.screenshot({ path: path.join(output, "research-dialog.png"), fullPage: true });
  await page.getByRole("button", { name: "Close", exact: true }).click();
@@ -81,6 +86,14 @@ try {
  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), "Mobile page overflows horizontally");
  await page.locator(".guide-card").filter({ hasText: "Slack" }).click();
  await page.getByRole("heading", { name: "Slack", exact: true }).waitFor();
+ const manifestDownload = page.waitForEvent("download");
+ await page.getByRole("link", { name: "Download manifest" }).click();
+ const manifest = await manifestDownload;
+ const manifestPath = path.join(output, "slack-socket-mode.json");
+ await manifest.saveAs(manifestPath);
+ const parsedManifest = JSON.parse(await readFile(manifestPath, "utf8"));
+ assert.equal(parsedManifest.settings.socket_mode_enabled, true);
+ assert.deepEqual(parsedManifest.oauth_config.scopes.bot, ["app_mentions:read", "chat:write"]);
  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), "Mobile guide overflows horizontally");
  await page.screenshot({ path: path.join(output, "slack-mobile.png"), fullPage: true });
  assert.deepEqual(errors, []);

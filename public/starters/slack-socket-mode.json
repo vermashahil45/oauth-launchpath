@@ -1,0 +1,17 @@
+{
+  "_metadata": { "major_version": 1 },
+  "display_information": { "name": "Launchpath Mention Demo" },
+  "features": {
+    "bot_user": {
+      "display_name": "Launchpath Mention Demo",
+      "always_online": false
+    }
+  },
+  "oauth_config": {
+    "scopes": { "bot": ["app_mentions:read", "chat:write"] }
+  },
+  "settings": {
+    "event_subscriptions": { "bot_events": ["app_mention"] },
+    "socket_mode_enabled": true
+  }
+}

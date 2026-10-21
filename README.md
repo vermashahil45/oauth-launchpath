@@ -13,6 +13,8 @@ Both links are private. Grant reviewer access before submission.
 
 Three researched guides cover GitHub public-profile access, Gmail restricted mailbox access, and Slack development/pilot/Marketplace distribution. Search and filter the library; follow a device-local checklist; inspect blockers, sources, uncertainty and agent/human handoffs; share a stable URL or export Markdown.
 
+The Slack guide includes a downloadable development manifest and a [setup walkthrough](docs/slack-development.md). It distinguishes Socket Mode prototyping from a Marketplace-compatible release. The draft was checked locally, not installed or validated by Slack.
+
 The live-generation implementation accepts an app name or website, use case and audience. It runs a web-research agent, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages.
 
 **Outstanding:** live generation is not enabled or verified because the server model credential is not configured. The app returns an explicit configuration error, not a canned result. This central demo check remains before submission.

@@ -27,6 +27,10 @@ No provider credentials were created. No user consent, token exchange, API conne
 
 TypeScript, production build, database migration, browser behavior and hosted checks are recorded in `docs/verification-results.md` after they run. Live model generation requires a valid server-side API credential and is separately identified there.
 
+## Additional setup preparation — 21 October 2026
+
+A research agent prepared a minimal Slack mention-response manifest from the official [manifest reference](https://docs.slack.dev/reference/app-manifest/) and [Socket Mode documentation](https://docs.slack.dev/apis/events-api/using-socket-mode/). Local JSON/permission/event checks passed. The draft is downloadable from the Slack guide. It was not submitted to Slack's manifest validator, registered, installed, or used in a real mention-response test. The documentation exposed an important constraint: Socket Mode apps cannot currently be listed in Slack Marketplace. The draft is explicitly a development option; the public-release path requires HTTP event delivery.
+
 ## Limits of the evidence gate
 
 Source membership proves the URL was returned by the research tool. It does not prove a page was read in full or that every claim is true. A generated guide remains an AI research draft. The prompt prefers official sources; it is not a universal provider-domain allowlist. Human verification is required before relying on high-impact review claims.

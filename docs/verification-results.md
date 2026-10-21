@@ -30,6 +30,14 @@ Browser checks ran with the bundled Playwright installation and pre-existing Chr
 
 The delayed-response fixture tested navigation behavior only; it was not stored or presented as a real generated guide. Deterministic model fixtures did not reach OpenAI or any OAuth provider.
 
+## Revision checked — 21 October 2026
+
+- Replaced promotional copy and decorative hero artwork with direct setup language and registration/connection/release checks. Agent-generated drafts remain labeled.
+- TypeScript, deterministic research checks, production build and desktop/mobile browser checks passed again.
+- The browser suite checked the research-configuration status, the disabled action when configuration is missing, direct endpoint rejection, and the downloadable Slack manifest.
+- Slack starter JSON passed local syntax, bot-scope and event checks. This is not Slack provider validation or a successful workspace installation.
+- No model key is present in this project's local configuration or hosted environment. The unfamiliar-provider live generation check remains blocked on that account setup.
+
 ## Remaining acceptance checks
 
 1. Configure a valid model secret, then generate an unfamiliar provider guide in the deployed app.

@@ -14,6 +14,12 @@ try {
  const { guides, guideSchema, validateReferences, collectSources, enforceEvidence, normalizedUrl, investigate } = await import(pathToFileURL(output).href);
  for (const g of guides) { guideSchema.parse(g); validateReferences(g); assert.ok(g.steps.length >= 4); assert.ok(g.effort.includes("estimate")); assert.ok(g.attempt.includes("No ") || /no (registration|project)/i.test(g.attempt) || g.attempt.includes("no registration")); }
  assert.equal(new Set(guides.map(g => g.id)).size, 3);
+ const { readFile } = await import("node:fs/promises");
+ const starter = JSON.parse(await readFile("public/starters/slack-socket-mode.json", "utf8"));
+ assert.deepEqual(starter.oauth_config.scopes.bot, ["app_mentions:read", "chat:write"]);
+ assert.deepEqual(starter.settings.event_subscriptions.bot_events, ["app_mention"]);
+ assert.equal(starter.settings.socket_mode_enabled, true);
+ assert.ok(!JSON.stringify(starter).includes("xox"));
  const base = guideSchema.parse(guides[0]);
  assert.throws(() => validateReferences({ ...base, steps: [{ ...base.steps[0], source: "invented" }] }), /Missing claim/);
  assert.throws(() => guideSchema.parse({ ...base, website: "javascript:alert(1)" }));

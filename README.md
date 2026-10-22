@@ -5,7 +5,7 @@ An OAuth setup navigator for agent builders: know the work, the wait, and your n
 - **Working preview:** https://oauth-launchpath.shahilsunny2104.chatgpt.site
 - **Source:** https://github.com/vermashahil45/oauth-launchpath
 
-Both links are private. Grant reviewer access before submission.
+Both links are public and can be opened without signing in. Public access verified on 22 October 2026.
 
 ![Launchpath guide library](docs/screenshots/library-desktop.png)
 

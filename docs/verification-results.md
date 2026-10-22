@@ -45,3 +45,7 @@ The delayed-response fixture tested navigation behavior only; it was not stored 
 3. Confirm the desired reviewer audience for both private links before submission.
 
 The central unfamiliar-provider live demo is not claimed complete until those model-backed checks pass.
+
+## Public access checked — 22 October 2026
+
+The owner approved making the site and repository public. Anonymous HTTP checks returned 200 for the website, Slack manifest, repository page and GitHub repository API. The unauthenticated GitHub response confirmed private=false. Reviewer access is complete. Live model-backed generation remains unverified until the model credential is configured.

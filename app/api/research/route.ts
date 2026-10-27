@@ -12,11 +12,13 @@ export async function POST(request: Request) {
   let input: z.infer<typeof inputSchema>;
   try { input = inputSchema.parse(JSON.parse(raw)); } catch { return fail("Enter an app name, a use case of at least eight characters, and a supported audience.", 400); }
   const researchConfig = env.GEMINI_API_KEY
-    ? { provider: "gemini" as const, key: env.GEMINI_API_KEY, model: env.GEMINI_MODEL || "gemini-2.5-flash-lite" }
+    ? env.TAVILY_API_KEY
+      ? { provider: "gemini" as const, key: env.GEMINI_API_KEY, searchKey: env.TAVILY_API_KEY, model: env.GEMINI_MODEL || "gemini-3.5-flash-lite" }
+      : null
     : env.OPENAI_API_KEY
       ? { provider: "openai" as const, key: env.OPENAI_API_KEY, model: env.OPENAI_MODEL || "gpt-5.4" }
       : null;
-  if (!researchConfig) return fail("Live research is not configured for this demo yet. The provider guides can still be read, shared, and exported.", 503);
+  if (!researchConfig) return fail("Configure either OpenAI, or both the free Gemini model key and Tavily search key. The provider guides can still be read, shared, and exported.", 503);
   if (!env.DB) return fail("Guide storage is not available. Ask the site owner to check the database binding.", 503);
   const db = env.DB;
   // Atomic, global daily quota persists across worker instances. No IP/user data stored.

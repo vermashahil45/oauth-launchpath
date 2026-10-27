@@ -46,12 +46,12 @@ The delayed-response fixture tested navigation behavior only; it was not stored 
 
 The central unfamiliar-provider live demo is not claimed complete until those model-backed checks pass.
 
-## No-cost Gemini option — 27 October 2026
+## No-cost provider path — 27 October 2026
 
-- Added a Gemini `generateContent` path using Google Search grounding for research and JSON response schemas for guide compilation. It uses `gemini-2.5-flash-lite` by default and prefers `GEMINI_API_KEY` when set.
-- The local OpenAI credential authenticated and the configured model was listed, but the Notion live-generation attempt returned HTTP 429; no guide was saved. No credential value was displayed or committed.
-- The Gemini path is implemented but has not been live-tested. Google's current pricing docs list free input/output and up to 500 daily grounded requests for Gemini 2.5 Flash-Lite, while its model docs warn access to 2.5 models may be limited to users who previously used them. Account eligibility, regional availability and quotas may block a free test. Free-tier prompts may be used to improve Google's products.
-- The deployed site still requires a server-side `GEMINI_API_KEY` secret to demonstrate live generation publicly.
+- Added support for Tavily Search (research) plus Gemini structured output (guide compilation), using `TAVILY_API_KEY` and `GEMINI_API_KEY`. The default Gemini model is `gemini-3.5-flash-lite`; this path does not invoke Google's paid Search grounding feature.
+- A first Gemini Search-grounding probe returned 404 because `gemini-2.5-flash-lite` is unavailable to new users. No guide was generated or saved in that probe.
+- Google currently lists Gemini 3.5 Flash-Lite text input/output on its free tier. Tavily lists 1,000 free credits per month without a card; basic searches consume one credit. Provider eligibility, free quotas and limits can still change. Google's free-tier prompts may be used to improve its products.
+- The Tavily+Gemini path is implemented but has not yet been live-tested. The deployed site needs both keys stored as server-side secrets before reviewers can use it.
 
 ## Public access checked — 22 October 2026
 

@@ -43,9 +43,26 @@ try {
   };
   const generated = await investigate({ provider: "Example", scenario: "Read public profile", distribution: "Public external integration" }, { key: "test-placeholder", model: "test-model" }, m => progress.push(m));
   assert.equal(calls, 2); assert.equal(generated.kind, "generated"); assert.ok(generated.attempt.startsWith("Public documentation research only")); assert.equal(progress.length, 3); assert.match(generated.id, /^[a-f0-9-]{36}$/);
+  let geminiCalls = 0;
+  globalThis.fetch = async (url, options) => {
+   geminiCalls++;
+   if (String(url).includes("api.tavily.com/search")) {
+    assert.equal(options.headers.Authorization, "Bearer search-placeholder");
+    const results = [...base.sources.map(s => ({ title: "Official source", url: s.url, content: "Official OAuth documentation" })), { title: "Registration", url: base.next.url, content: "Open the developer console" }];
+    return Response.json({ results });
+   }
+   assert.ok(String(url).includes("gemini-3.5-flash-lite:generateContent"));
+   assert.equal(options.headers["x-goog-api-key"], "model-placeholder");
+   const request = JSON.parse(options.body);
+   assert.equal(request.generationConfig.responseMimeType, "application/json");
+   assert.ok(!request.tools, "free model call must not request paid search grounding");
+   return Response.json({ candidates: [{ content: { parts: [{ text: JSON.stringify({ ...base, attempt: "Model falsely claims a real setup test." }) }] } }] });
+  };
+  const geminiGuide = await investigate({ provider: "Example", scenario: "Read public profile", distribution: "Public external integration" }, { provider: "gemini", key: "model-placeholder", searchKey: "search-placeholder", model: "gemini-3.5-flash-lite" }, () => {});
+  assert.equal(geminiCalls, 2); assert.equal(geminiGuide.kind, "generated"); assert.ok(geminiGuide.attempt.startsWith("Public documentation research only"));
   globalThis.fetch = async () => Response.json({ error: { message: "secret raw diagnostic" } }, { status: 401 });
   await assert.rejects(() => investigate({provider:"Example",scenario:"Public profile",distribution:"Public external integration"},{key:"test-placeholder",model:"test"},()=>{}), e => !e.message.includes("secret raw diagnostic") && e.message.includes("credential"));
  } finally { globalThis.fetch = originalFetch; }
- console.log("PASS: 3 curated guide contracts, evidence references, URL rejection, citation membership, mocked two-stage research, false setup-claim override, and sanitized provider errors.");
+ console.log("PASS: 3 curated guide contracts, evidence references, URL rejection, citation membership, mocked OpenAI and Tavily+Gemini research, false setup-claim override, and sanitized provider errors.");
  console.log("This is deterministic validation; no live model call or provider OAuth flow was tested.");
 } finally { await rm(temp, { recursive: true, force: true }); }

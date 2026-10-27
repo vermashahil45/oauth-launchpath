@@ -6,5 +6,6 @@ declare namespace Cloudflare {
     OPENAI_MODEL?: string;
     GEMINI_API_KEY?: string;
     GEMINI_MODEL?: string;
+    TAVILY_API_KEY?: string;
   }
 }

@@ -15,9 +15,9 @@ Three researched guides cover GitHub public-profile access, Gmail restricted mai
 
 The Slack guide includes a downloadable development manifest and a [setup walkthrough](docs/slack-development.md). It distinguishes Socket Mode prototyping from a Marketplace-compatible release. The draft was checked locally, not installed or validated by Slack.
 
-The live-generation implementation accepts an app name or website, use case and audience. It runs a web-research agent, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages. It supports OpenAI Responses or Gemini's Google Search grounding and structured output.
+The live-generation implementation accepts an app name or website, use case and audience. It searches the web, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages. It supports OpenAI Responses or a no-cost path using Tavily Search and Gemini structured output.
 
-**No-cost demo option:** configure a Gemini API key from Google AI Studio in `GEMINI_API_KEY`. The app prefers Gemini when both provider keys are present. Google currently lists free input/output tokens and up to 500 Google Search grounding requests per day for Gemini 2.5 Flash-Lite, subject to account eligibility, regional/model availability and changing quotas. Google notes free-tier prompts may be used to improve its products. Do not submit confidential use cases. Generation with this path has not yet been verified in this project.
+**No-cost demo option:** configure `GEMINI_API_KEY` from Google AI Studio and `TAVILY_API_KEY` from Tavily's free Researcher plan. Tavily lists 1,000 search credits per month with no card required; basic search costs one credit. Gemini 3.5 Flash-Lite lists free text input/output. The app uses Tavily for research and Gemini for structured guide generation, so it does not call Google's paid Search grounding tool. Quotas and account access can still change or block a request. Google says free-tier prompts may be used to improve its products. Do not submit confidential use cases. This path has not yet completed a live generation.
 
 ## Setup
 
@@ -39,7 +39,7 @@ npm run typecheck
 npm run build
 ```
 
-For a no-cost local test, create a key in [Google AI Studio](https://aistudio.google.com/app/apikey) and add `GEMINI_API_KEY=...` to the ignored `.dev.vars` file. `GEMINI_MODEL` defaults to `gemini-2.5-flash-lite`. Check AI Studio's project tier before use: this code does not configure paid billing, and provider quotas or eligibility can still block requests. If Gemini is configured, it takes priority over OpenAI. Alternatively set `OPENAI_API_KEY` and optionally `OPENAI_MODEL` (default `gpt-5.4`); OpenAI API usage may require credit. For a deployed demo, add the chosen key as a secret runtime variable in Sites and redeploy. Never commit credentials.
+For a no-cost local test, create a key in [Google AI Studio](https://aistudio.google.com/app/apikey) and a Tavily key on its [free plan](https://app.tavily.com/home). Add `GEMINI_API_KEY=...` and `TAVILY_API_KEY=...` to the ignored `.dev.vars` file. `GEMINI_MODEL` defaults to `gemini-3.5-flash-lite`. Choose only the free plan and do not enable paid billing. Tavily documents 1,000 free credits per month without a credit card; each basic search uses one credit. Check Google's current model/quota terms before use; free-tier prompts may be used to improve its products. If both Gemini and Tavily are configured, that path takes priority over OpenAI. Alternatively set `OPENAI_API_KEY` and optionally `OPENAI_MODEL` (default `gpt-5.4`); OpenAI API usage may require credit. For a deployed demo, add both Gemini and Tavily keys as server secrets in Sites and redeploy. Never commit credentials.
 
 Uses the supplied Sites Vinext/React starter and Cloudflare D1. `.openai/hosting.json` declares `DB`; Sites applies the versioned Drizzle migrations during deployment. Local and hosted databases are separate.
 

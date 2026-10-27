@@ -46,6 +46,13 @@ The delayed-response fixture tested navigation behavior only; it was not stored 
 
 The central unfamiliar-provider live demo is not claimed complete until those model-backed checks pass.
 
+## No-cost Gemini option — 27 October 2026
+
+- Added a Gemini `generateContent` path using Google Search grounding for research and JSON response schemas for guide compilation. It uses `gemini-2.5-flash-lite` by default and prefers `GEMINI_API_KEY` when set.
+- The local OpenAI credential authenticated and the configured model was listed, but the Notion live-generation attempt returned HTTP 429; no guide was saved. No credential value was displayed or committed.
+- The Gemini path is implemented but has not been live-tested. Google's current pricing docs list free input/output and up to 500 daily grounded requests for Gemini 2.5 Flash-Lite, while its model docs warn access to 2.5 models may be limited to users who previously used them. Account eligibility, regional availability and quotas may block a free test. Free-tier prompts may be used to improve Google's products.
+- The deployed site still requires a server-side `GEMINI_API_KEY` secret to demonstrate live generation publicly.
+
 ## Public access checked — 22 October 2026
 
 The owner approved making the site and repository public. Anonymous HTTP checks returned 200 for the website, Slack manifest, repository page and GitHub repository API. The unauthenticated GitHub response confirmed private=false. Reviewer access is complete. Live model-backed generation remains unverified until the model credential is configured.

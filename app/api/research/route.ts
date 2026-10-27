@@ -11,7 +11,12 @@ export async function POST(request: Request) {
   if (raw.length > 6000) return fail("Request is too large.", 413);
   let input: z.infer<typeof inputSchema>;
   try { input = inputSchema.parse(JSON.parse(raw)); } catch { return fail("Enter an app name, a use case of at least eight characters, and a supported audience.", 400); }
-  if (!env.OPENAI_API_KEY) return fail("Live research is not configured for this demo yet. The provider guides can still be read, shared, and exported.", 503);
+  const researchConfig = env.GEMINI_API_KEY
+    ? { provider: "gemini" as const, key: env.GEMINI_API_KEY, model: env.GEMINI_MODEL || "gemini-2.5-flash-lite" }
+    : env.OPENAI_API_KEY
+      ? { provider: "openai" as const, key: env.OPENAI_API_KEY, model: env.OPENAI_MODEL || "gpt-5.4" }
+      : null;
+  if (!researchConfig) return fail("Live research is not configured for this demo yet. The provider guides can still be read, shared, and exported.", 503);
   if (!env.DB) return fail("Guide storage is not available. Ask the site owner to check the database binding.", 503);
   const db = env.DB;
   // Atomic, global daily quota persists across worker instances. No IP/user data stored.
@@ -28,7 +33,7 @@ export async function POST(request: Request) {
       const send = (event: object) => { if (active) { try { controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`)); } catch { active = false; abort.abort(); } } };
       const heartbeat = setInterval(() => { if (active) { try { controller.enqueue(encoder.encode(": heartbeat\n\n")); } catch { active = false; abort.abort(); } } }, 15000);
       try {
-        const guide = await investigate(input, { key: env.OPENAI_API_KEY!, model: env.OPENAI_MODEL || "gpt-5.4" }, message => send({ type: "progress", message }), abort.signal);
+        const guide = await investigate(input, researchConfig, message => send({ type: "progress", message }), abort.signal);
         await db.prepare("INSERT INTO oauth_guides (id, content, created_at) VALUES (?, ?, ?)").bind(guide.id, JSON.stringify(guide), new Date().toISOString()).run();
         send({ type: "done", guide });
       } catch (e) {

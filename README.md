@@ -15,9 +15,9 @@ Three researched guides cover GitHub public-profile access, Gmail restricted mai
 
 The Slack guide includes a downloadable development manifest and a [setup walkthrough](docs/slack-development.md). It distinguishes Socket Mode prototyping from a Marketplace-compatible release. The draft was checked locally, not installed or validated by Slack.
 
-The live-generation implementation accepts an app name or website, use case and audience. It runs a web-research agent, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages.
+The live-generation implementation accepts an app name or website, use case and audience. It runs a web-research agent, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages. It supports OpenAI Responses or Gemini's Google Search grounding and structured output.
 
-**Outstanding:** live generation is not enabled or verified because the server model credential is not configured. The app returns an explicit configuration error, not a canned result. This central demo check remains before submission.
+**No-cost demo option:** configure a Gemini API key from Google AI Studio in `GEMINI_API_KEY`. The app prefers Gemini when both provider keys are present. Google currently lists free input/output tokens and up to 500 Google Search grounding requests per day for Gemini 2.5 Flash-Lite, subject to account eligibility, regional/model availability and changing quotas. Google notes free-tier prompts may be used to improve its products. Do not submit confidential use cases. Generation with this path has not yet been verified in this project.
 
 ## Setup
 
@@ -39,7 +39,7 @@ npm run typecheck
 npm run build
 ```
 
-Configure `OPENAI_API_KEY` privately in `.dev.vars` locally and as a secret runtime value in Sites for deployment. `OPENAI_MODEL` defaults to `gpt-5.4`; the account needs model/web-search access and API credit. Redeploy after changing hosted variables. Never commit credentials.
+For a no-cost local test, create a key in [Google AI Studio](https://aistudio.google.com/app/apikey) and add `GEMINI_API_KEY=...` to the ignored `.dev.vars` file. `GEMINI_MODEL` defaults to `gemini-2.5-flash-lite`. Check AI Studio's project tier before use: this code does not configure paid billing, and provider quotas or eligibility can still block requests. If Gemini is configured, it takes priority over OpenAI. Alternatively set `OPENAI_API_KEY` and optionally `OPENAI_MODEL` (default `gpt-5.4`); OpenAI API usage may require credit. For a deployed demo, add the chosen key as a secret runtime variable in Sites and redeploy. Never commit credentials.
 
 Uses the supplied Sites Vinext/React starter and Cloudflare D1. `.openai/hosting.json` declares `DB`; Sites applies the versioned Drizzle migrations during deployment. Local and hosted databases are separate.
 
@@ -53,7 +53,7 @@ Uses the supplied Sites Vinext/React starter and Cloudflare D1. `.openai/hosting
 
 ## Verification and limits
 
-TypeScript, the production build, local migration, deterministic research checks and desktop/mobile browser checks passed. Hosted checks passed for the page, seeded API, database-backed lookup, origin protection and missing-secret response. See [full results](docs/verification-results.md).
+TypeScript, the production build, local migration, deterministic research checks and desktop/mobile browser checks passed. Hosted checks passed for the page, seeded API, database-backed lookup, origin protection and missing-secret response. Neither provider-backed live path has completed a successful generation yet. See [full results](docs/verification-results.md).
 
 No provider registration, consent, token exchange or approval was completed. Public console entry attempts and corrected assumptions are recorded in [validation notes](docs/validation.md). Hands-on durations are estimates, not measurements.
 

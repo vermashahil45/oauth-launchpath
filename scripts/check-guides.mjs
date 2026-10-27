@@ -8,10 +8,10 @@ const temp = await mkdtemp(path.join(tmpdir(), "launchpath-check-"));
 try {
  const entry = path.resolve("work/check-entry.ts");
  await import("node:fs/promises").then(fs => fs.mkdir("work", { recursive: true }));
- await writeFile(entry, `export { guides } from "../lib/guides"; export { guideSchema, validateReferences } from "../lib/guide"; export { collectSources, enforceEvidence, normalizedUrl, investigate } from "../lib/research";`);
+ await writeFile(entry, `export { guides } from "../lib/guides"; export { guideSchema, validateReferences } from "../lib/guide"; export { collectSources, correctKnownTokenContradictions, correctNotionPermissionModel, enforceEvidence, normalizedUrl, investigate } from "../lib/research";`);
  const output = path.join(temp, "check.mjs");
  await build({ entryPoints: [entry], outfile: output, bundle: true, platform: "node", format: "esm" });
- const { guides, guideSchema, validateReferences, collectSources, enforceEvidence, normalizedUrl, investigate } = await import(pathToFileURL(output).href);
+ const { guides, guideSchema, validateReferences, collectSources, correctKnownTokenContradictions, correctNotionPermissionModel, enforceEvidence, normalizedUrl, investigate } = await import(pathToFileURL(output).href);
  for (const g of guides) { guideSchema.parse(g); validateReferences(g); assert.ok(g.steps.length >= 4); assert.ok(g.effort.includes("estimate")); assert.ok(g.attempt.includes("No ") || /no (registration|project)/i.test(g.attempt) || g.attempt.includes("no registration")); }
  assert.equal(new Set(guides.map(g => g.id)).size, 3);
  const { readFile } = await import("node:fs/promises");
@@ -29,6 +29,10 @@ try {
  assert.equal(normalizedUrl("https://example.com/docs/?utm_source=test#part"), "https://example.com/docs");
  const evidence = { status: "completed", output: [{ type: "web_search_call", action: { sources: [{ url: base.sources[0].url }] } }, { type: "message", content: [{ type: "output_text", text: "Research", annotations: [{ type: "url_citation", url: base.sources[1].url }] }] }] };
  assert.equal(collectSources(evidence).length, 2);
+ const tokenCorrection = correctKnownTokenContradictions({ ...base, unknowns: ["Refresh token details are unknown"] }, "Official docs return access_token and refresh_token and describe refresh_token behavior.");
+ assert.equal(tokenCorrection.unknowns.length, 0); assert.match(tokenCorrection.correction, /explicitly describes refresh_token/);
+ const notionCorrection = correctNotionPermissionModel({ ...base, sources: [{ id: "notion-auth", url: "https://developers.notion.com/guides/get-started/authorization" }], scopes: [{ name: "Workspace Content Search", reason: "Invented scope", source: "notion-auth" }], unknowns: ["Refresh token details are unknown"] }, "Notion");
+ assert.equal(notionCorrection.scopes[0].name, "Notion capabilities and page selection"); assert.equal(notionCorrection.scopes[0].source, "notion-auth"); assert.equal(notionCorrection.unknowns.length, 0);
  const originalFetch = globalThis.fetch;
  const progress = [];
  let calls = 0;

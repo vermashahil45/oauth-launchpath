@@ -17,7 +17,7 @@ The Slack guide includes a downloadable development manifest and a [setup walkth
 
 The live-generation implementation accepts an app name or website, use case and audience. It searches the web, compiles a structured guide, validates source references and returned source/action URLs, and saves a D1 record with a shareable URL. Progress reflects actual server stages. It supports OpenAI Responses or a no-cost path using Tavily Search and Gemini structured output.
 
-**No-cost demo option:** configure `GEMINI_API_KEY` from Google AI Studio and `TAVILY_API_KEY` from Tavily's free Researcher plan. Tavily lists 1,000 search credits per month with no card required; basic search costs one credit. Gemini 3.5 Flash-Lite lists free text input/output. The app uses Tavily for research and Gemini for structured guide generation, so it does not call Google's paid Search grounding tool. Quotas and account access can still change or block a request. Google says free-tier prompts may be used to improve its products. Do not submit confidential use cases. This path has not yet completed a live generation.
+**No-cost demo option:** configure `GEMINI_API_KEY` from Google AI Studio and `TAVILY_API_KEY` from Tavily's free Researcher plan. Tavily lists 1,000 search credits per month with no card required; basic search costs one credit. Gemini 3.5 Flash-Lite lists free text input/output. The app uses Tavily for research and Gemini for structured guide generation, so it does not call Google's paid Search grounding tool. Quotas and account access can still change or block a request. Google says free-tier prompts may be used to improve its products. Do not submit confidential use cases. **Local live guide generation was verified**; the hosted public site still needs its server-side keys configured and redeployed.
 
 ## Setup
 
@@ -53,7 +53,7 @@ Uses the supplied Sites Vinext/React starter and Cloudflare D1. `.openai/hosting
 
 ## Verification and limits
 
-TypeScript, the production build, local migration, deterministic research checks and desktop/mobile browser checks passed. Hosted checks passed for the page, seeded API, database-backed lookup, origin protection and missing-secret response. Neither provider-backed live path has completed a successful generation yet. See [full results](docs/verification-results.md).
+TypeScript, the production build, local migration, deterministic research checks and desktop/mobile browser checks passed. Hosted checks passed for the page, seeded API, database-backed lookup, origin protection and missing-secret response. A local Tavily+Gemini generation for Notion saved and reopened successfully; its sources and corrections are recorded in [full results](docs/verification-results.md). Hosted model-backed generation is not yet configured.
 
 No provider registration, consent, token exchange or approval was completed. Public console entry attempts and corrected assumptions are recorded in [validation notes](docs/validation.md). Hands-on durations are estimates, not measurements.
 

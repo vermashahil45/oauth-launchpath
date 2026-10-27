@@ -51,7 +51,10 @@ The central unfamiliar-provider live demo is not claimed complete until those mo
 - Added support for Tavily Search (research) plus Gemini structured output (guide compilation), using `TAVILY_API_KEY` and `GEMINI_API_KEY`. The default Gemini model is `gemini-3.5-flash-lite`; this path does not invoke Google's paid Search grounding feature.
 - A first Gemini Search-grounding probe returned 404 because `gemini-2.5-flash-lite` is unavailable to new users. No guide was generated or saved in that probe.
 - Google currently lists Gemini 3.5 Flash-Lite text input/output on its free tier. Tavily lists 1,000 free credits per month without a card; basic searches consume one credit. Provider eligibility, free quotas and limits can still change. Google's free-tier prompts may be used to improve its products.
-- The Tavily+Gemini path is implemented but has not yet been live-tested. The deployed site needs both keys stored as server-side secrets before reviewers can use it.
+- Live local generation was completed for Notion using Tavily Search and Gemini 3.5 Flash-Lite. Tavily returned eight HTTPS source links; the provider-domain filter retained two Notion developer documentation pages. The guide saved to local D1 and reopened by ID (HTTP 200).
+- The first generated draft mixed in secondary sources and misstated Notion's permission model and token-refresh documentation. Review against Notion's [authorization guide](https://developers.notion.com/guides/get-started/authorization) and [overview](https://developers.notion.com/guides/get-started/overview) corrected it to connection capabilities plus user-selected pages and removed a false token-unknown statement. A deterministic regression check now covers this correction.
+- This is public documentation research only. No authenticated developer-console setup, OAuth registration, authorization, token exchange or approval was attempted. The public hosted site still needs `GEMINI_API_KEY` and `TAVILY_API_KEY` set as server-side secrets and a redeploy; that hosted live path was not verified.
+- The initial OpenAI API attempt could not proceed because the account had no API credit. No purchase is needed for the implemented Gemini/Tavily path within its free quotas; quotas, model availability and free-tier terms may change.
 
 ## Public access checked — 22 October 2026
 
